@@ -1,4 +1,4 @@
-package spring4Template.ui;
+package spring4Template.ws.schema;
 
 public class ExceptionResponse {
 

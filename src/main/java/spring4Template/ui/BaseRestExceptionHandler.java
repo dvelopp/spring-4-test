@@ -1,6 +1,7 @@
 package spring4Template.ui;
 
 import org.springframework.web.bind.annotation.*;
+import spring4Template.ws.schema.ExceptionResponse;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
