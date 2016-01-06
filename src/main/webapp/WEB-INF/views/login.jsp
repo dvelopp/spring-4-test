@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <c:import url="myAppJavascripts.jsp"/>
+    <c:import url="myAppJavaScripts.jsp"/>
 </head>
 <body ng-app="myApp">
 <div class="login-form ui-widget" ng-controller="LoginController as loginCtrl">

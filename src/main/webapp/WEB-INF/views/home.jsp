@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <c:import url="myAppJavascripts.jsp"/>
+    <c:import url="myAppJavaScripts.jsp"/>
     <script src="/resources/scripts/homeController.js"></script>
 </head>
 <body ng-app="myApp">
