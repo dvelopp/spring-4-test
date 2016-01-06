@@ -1,0 +1,16 @@
+.data-table{
+    border: groove;
+}
+
+.data-table td{
+    border: groove;
+    margin: 0px;
+}
+
+.hidden{
+    display:none;
+}
+
+.simple-button{
+    height: 25px;
+}
