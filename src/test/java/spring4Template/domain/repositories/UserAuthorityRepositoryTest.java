@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import spring4Template.domain.HibernateIntegrationTest;
 import spring4Template.domain.entities.UserAuthority;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static spring4Template.domain.entities.UserAuthorityFixture.createDefaultUserAuthority;
 
@@ -20,6 +22,26 @@ public class UserAuthorityRepositoryTest extends HibernateIntegrationTest<UserAu
 
         UserAuthority actualUserAuthority = getById(expectedUserAuthority.getId());
         assertThat(actualUserAuthority).isEqualTo(expectedUserAuthority);
+    }
+
+    @Test
+    public void getById_ValidId_EntityHasBeenReturned(){
+        UserAuthority expectedUserAuthority = createDefaultUserAuthority();
+        save(expectedUserAuthority);
+
+        UserAuthority actualUserAuthority = userAuthorityRepository.findById(expectedUserAuthority.getId());
+
+        assertThat(actualUserAuthority).isEqualTo(expectedUserAuthority);
+    }
+
+    @Test
+    public void getById_InvalidId_EntityHasBeenReturned(){
+        UserAuthority expectedUserAuthority = createDefaultUserAuthority();
+        save(expectedUserAuthority);
+
+        UserAuthority actualUserAuthority = userAuthorityRepository.findById(UUID.randomUUID().toString());
+
+        assertThat(actualUserAuthority).isNull();
     }
 
     @Override

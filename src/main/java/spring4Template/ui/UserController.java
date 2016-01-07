@@ -12,11 +12,13 @@ import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_VIEW;
 @RequestMapping(value = "user")
 public class UserController {
 
+    static final String USER_LIST_VIEW = "user/user_list";
+
     @Secured(ROLE_USER_VIEW)
     @Transactional
     @RequestMapping(value = "/list", method = GET)
     public String list() {
-        return "user/user_list";
+        return USER_LIST_VIEW;
     }
 
 }

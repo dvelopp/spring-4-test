@@ -15,5 +15,4 @@ public class BaseRestExceptionHandler {
         return new ExceptionResponse("There is an error while processing the action. " + exception.getMessage());
     }
 
-
 }

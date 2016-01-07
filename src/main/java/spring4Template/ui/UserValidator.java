@@ -12,6 +12,9 @@ import static spring4Template.ui.validation.UserValidationFieldsConstants.*;
 @Component
 public class UserValidator implements Validator {
 
+    public static final String USER_NAME_IS_EMPTY_CODE = "user.empty-name";
+    public static final String USER_NAME_IS_EMPTY_MESSAGE = "You have to specify user name";
+
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(UserCommand.class);
@@ -21,7 +24,7 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserCommand userCommand = (UserCommand) target;
         if (isBlank(userCommand.getUserName())) {
-            errors.rejectValue(USER_NAME_FIELD, "user.empty-name", "You have to specify user name");
+            errors.rejectValue(USER_NAME_FIELD, USER_NAME_IS_EMPTY_CODE, USER_NAME_IS_EMPTY_MESSAGE);
         }
         if (isBlank(userCommand.getFirstName())) {
             errors.rejectValue(USER_FIRST_NAME_FIELD, "user.empty-first-name", "You have to specify first name");
