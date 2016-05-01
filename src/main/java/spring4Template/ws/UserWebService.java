@@ -23,7 +23,7 @@ import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_DELETE;
 import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_EDIT;
 
 @RestController
-@RequestMapping(value = "ws/user")
+@RequestMapping(value = "ws/users")
 public class UserWebService {
 
     @Autowired private ValidationResultFactory validationResultFactory;
@@ -39,7 +39,7 @@ public class UserWebService {
         binder.setValidator(userValidator);
     }
 
-    @RequestMapping(value = "/list", method = GET)
+    @RequestMapping(method = GET)
     public UserListResponse list() {
         UserListResponse response = new UserListResponse();
         response.setHasUserDeleteAccess(authProvider.hasRole(ROLE_USER_DELETE));
@@ -49,13 +49,13 @@ public class UserWebService {
         return response;
     }
 
-    @RequestMapping(value = "/{userId}/delete", method = DELETE)
+    @RequestMapping(value = "/{userId}", method = DELETE)
     public ResponseEntity delete(@PathVariable String userId) {
         userService.delete(userId);
         return new ResponseEntity<String>(OK);
     }
 
-    @RequestMapping(value = "/save", method = POST)
+    @RequestMapping(method = POST)
     public ResponseEntity save(@Validated @ModelAttribute(COMMAND_NAME) UserCommand userCommand, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, String> validationResult = validationResultFactory.getFiledValidationResult(bindingResult);
@@ -64,6 +64,5 @@ public class UserWebService {
         userService.save(userCommand);
         return new ResponseEntity<String>(OK);
     }
-
 
 }

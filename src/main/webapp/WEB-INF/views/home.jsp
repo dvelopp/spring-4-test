@@ -22,5 +22,9 @@
             </li>
         </ul>
     </div>
+    <ul ng-controller="LanguageController">
+        <li><a href="" ng-click="changeLanguage('en')">en</a>
+        <li><a href="" ng-click="changeLanguage('ru')">de</a>
+    </ul>
 </body>
 </html>

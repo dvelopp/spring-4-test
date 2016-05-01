@@ -4,19 +4,20 @@
 <html>
 <head>
     <c:import url="myAppJavaScripts.jsp"/>
+    <script src="/resources/scripts/loginPageController.js"></script>
 </head>
 <body ng-app="myApp">
-<div class="login-form ui-widget" ng-controller="LoginController as loginCtrl">
+<div class="login-form ui-widget" ng-controller="LoginPageController as loginCtrl">
     <form method="post" action="login" id="loginForm" name="loginForm">
         <div class="ui-widget-content" style="width: 350px; margin-left: auto; margin-right: auto;">
             <div class="ui-widget-header">Authentication</div>
             <table>
                 <tr>
-                    <td>User name:</td>
+                    <td translate>system.pages.login-page.username</td>
                     <td><input type="text" id="username" name="username" ng-model="credentials.username"></td>
                 </tr>
                 <tr>
-                    <td>Password:</td>
+                    <td translate>system.pages.login-page.password</td>
                     <td><input type="password"id="password" name="password" ng-model="credentials.password"></td>
                 </tr>
                 <tr>

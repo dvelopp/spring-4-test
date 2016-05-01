@@ -1,0 +1,918 @@
+Index: src/main/webapp/WEB-INF/views/user/user_list.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/WEB-INF/views/user/user_list.jsp	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/WEB-INF/views/user/user_list.jsp	(revision )
+@@ -5,11 +5,13 @@
+ <head>
+     <c:import url="../myAppJavaScripts.jsp"/>
+     <script src="/resources/scripts/userController.js"></script>
++    <script src="/resources/scripts/userEditController.js"></script>
++    <script src="/resources/scripts/userDeleteController.js"></script>
+ </head>
+ <body ng-app="myApp">
+ 
+-<div ng-controller="UserController as userCtrl" class="ui-widget" on-dynamic-content-updated="initializeJQueryUI">
+-    <table ng-cloak class="data-table" cellspacing="0" after-render="initializeJQueryUI">
++<div ng-controller="UserOverviewController as userCtrl" class="ui-widget">
++    <table ng-cloak class="table table-bordered table-hover" cellspacing="0" after-render="initializeJQueryUI">
+         <thead class="ui-widget-header">
+         <th>Actions</th>
+         <th>User name</th>
+@@ -18,11 +20,15 @@
+         <th>User group</th>
+         <th>System user</th>
+         </thead>
+-        <tbody class="ui-widget-content">
++        <tbody>
+         <tr ng-repeat="user in model.users">
+             <td>
+-                <button class="simple-button edit-button" ng-show="model.hasUserEditAccess" ng-click="edit(user)"></button>
+-                <button class="simple-button delete-button" ng-show="model.hasUserDeleteAccess && !user.systemUser" ng-click="deleteDialog(user)"></button>
++                <button class="btn btn-default" ng-show="model.hasUserEditAccess" ng-click="edit(user)">
++                    <span class="glyphicon glyphicon-edit"></span>
++                </button>
++                <button class="btn btn-default" ng-show="model.hasUserDeleteAccess && !user.systemUser" ng-click="deleteUser(user)">
++                    <span class="glyphicon glyphicon-remove"></span>
++                </button>
+             </td>
+             <td>{{user.userName}}</td>
+             <td>{{user.firstName}}</td>
+@@ -32,15 +38,8 @@
+         </tr>
+         </tbody>
+     </table>
+-    <button ng-click="create()" class="button">Create a new user</button>
++    <button ng-click="create()" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create a new user</button>
+     <div><a href="/home">Go to home page</a></div>
+-    <div class="dialog" id="userEditDialog" class="hidden" title="{{dialogTitle}}">
+-        <c:import url="user_edit.jsp"/>
+-    </div>
++</div>
+-    <div id="userDeleteConfirmDialog" class="hidden" title="User deletion">
+-        <p>Are you sure that you want to delete selected user?</p>
+-    </div>
+-</div>
+-
+ </body>
+ </html>
+Index: src/main/java/spring4Template/configuration/WebSecurityConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/configuration/WebSecurityConfig.java	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/java/spring4Template/configuration/WebSecurityConfig.java	(revision )
+@@ -24,6 +24,7 @@
+     protected void configure(HttpSecurity http) throws Exception {
+         http.authorizeRequests()
+                 .antMatchers("/resources/**").permitAll()
++                .antMatchers("/messageBundle").permitAll()
+                 .antMatchers("/initDB").permitAll()
+                 .anyRequest().authenticated()
+             .and()
+\ No newline at end of file
+Index: src/main/resources/messages.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/resources/messages.properties	(revision )
++++ src/main/resources/messages.properties	(revision )
+@@ -0,0 +1,2 @@
++system.pages.login-page.username=User name
++system.pages.login-page.password=Password
+\ No newline at end of file
+Index: src/main/java/spring4Template/ui/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/ui/UserController.java	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/java/spring4Template/ui/UserController.java	(revision )
+@@ -6,6 +6,8 @@
+ import org.springframework.web.bind.annotation.RequestMapping;
+ 
+ import static org.springframework.web.bind.annotation.RequestMethod.GET;
++import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_DELETE;
++import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_EDIT;
+ import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_VIEW;
+ 
+ @Controller
+@@ -13,12 +15,28 @@
+ public class UserController {
+ 
+     static final String USER_LIST_VIEW = "user/user_list";
++    static final String USER_EDIT_VIEW = "user/user_edit";
++    static final String USER_DELETE_VIEW = "user/user_delete";
+ 
+     @Secured(ROLE_USER_VIEW)
+     @Transactional
+     @RequestMapping(value = "/list", method = GET)
+     public String list() {
+         return USER_LIST_VIEW;
++    }
++
++    @Secured(ROLE_USER_EDIT)
++    @Transactional
++    @RequestMapping(value = "/edit", method = GET)
++    public String edit() {
++        return USER_EDIT_VIEW;
++    }
++
++    @Secured(ROLE_USER_DELETE)
++    @Transactional
++    @RequestMapping(value = "/delete", method = GET)
++    public String delete() {
++        return USER_DELETE_VIEW;
+     }
+ 
+ }
+Index: src/main/resources/messages_ru.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/resources/messages_ru.properties	(revision )
++++ src/main/resources/messages_ru.properties	(revision )
+@@ -0,0 +1,2 @@
++system.pages.login-page.username=Имя пользователя
++system.pages.login-page.password=Пароль
+\ No newline at end of file
+Index: src/main/webapp/WEB-INF/views/user/user_delete.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/WEB-INF/views/user/user_delete.jsp	(revision )
++++ src/main/webapp/WEB-INF/views/user/user_delete.jsp	(revision )
+@@ -0,0 +1,12 @@
++<%@ page contentType="text/html;charset=UTF-8" language="java" %>
++
++<form id="userEditForm" name="userEditForm" ng-submit="save()">
++    <input type="hidden" name="id" ng-model="editedUser.id">
++    <div class="modal-body">
++        Are you sure that you want to delete user {{userToDelete.userName}} ?
++    </div>
++    <div class="modal-footer">
++        <button class="btn btn-primary" ng-click="delete ()">OK</button>
++        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
++    </div>
++</form>
+Index: src/main/java/spring4Template/ws/UserGroupWebService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/ws/UserGroupWebService.java	(revision )
++++ src/main/java/spring4Template/ws/UserGroupWebService.java	(revision )
+@@ -0,0 +1,24 @@
++package spring4Template.ws;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RestController;
++import spring4Template.service.UserGroupService;
++import spring4Template.ws.schema.UserGroupsResponse;
++
++import static org.springframework.web.bind.annotation.RequestMethod.GET;
++
++@RestController
++@RequestMapping(value = "ws/users/groups")
++public class UserGroupWebService {
++
++    @Autowired private UserGroupService userGroupService;
++
++    @RequestMapping(method = GET)
++    public UserGroupsResponse list() {
++        UserGroupsResponse response = new UserGroupsResponse();
++        response.setUserGroups(userGroupService.getUserGroups());
++        return response;
++    }
++
++}
+Index: src/main/webapp/resources/scripts/controllers.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/controllers.js	(revision )
++++ src/main/webapp/resources/scripts/controllers.js	(revision )
+@@ -0,0 +1,5 @@
++app.controller('LanguageController', ['$scope','$translate','$location', function($scope, $translate, $location) {
++    $scope.changeLanguage = function (locale) {
++        $translate.use(locale);
++    };
++}]);
+\ No newline at end of file
+Index: src/main/java/spring4Template/ui/SerializableMessageBundleController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/ui/SerializableMessageBundleController.java	(revision )
++++ src/main/java/spring4Template/ui/SerializableMessageBundleController.java	(revision )
+@@ -0,0 +1,28 @@
++package spring4Template.ui;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RequestMethod;
++import org.springframework.web.bind.annotation.RequestParam;
++import org.springframework.web.bind.annotation.ResponseBody;
++import spring4Template.configuration.SerializableResourceBundleMessageSource;
++
++import java.util.Locale;
++import java.util.Properties;
++
++@Controller
++@RequestMapping("/messageBundle")
++public class SerializableMessageBundleController {
++
++    @Autowired private SerializableResourceBundleMessageSource messageBundle;
++
++    /**
++     * ReadAll
++     */
++    @RequestMapping(method = RequestMethod.GET)
++    @ResponseBody
++    public Properties list(@RequestParam String lang) {
++        return messageBundle.getAllProperties(new Locale(lang));
++    }
++}
+\ No newline at end of file
+Index: src/main/webapp/WEB-INF/views/myAppJavascripts.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/WEB-INF/views/myAppJavascripts.jsp	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/WEB-INF/views/myAppJavaScripts.jsp	(revision )
+@@ -1,9 +1,21 @@
+ <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+ 
+-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="application/javascript"></script>
+-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="application/javascript"></script>
+-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/redmond/jquery-ui.css">
+-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/jquery/dist/jquery.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/jquery-ui/jquery-ui.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular/angular.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-cookies/angular-cookies.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-resource/angular-resource.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-translate/angular-translate.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-translate-loader-url/angular-translate-loader-url.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-bootstrap/ui-bootstrap.min.js" type="application/javascript"></script>
++<script src="/resources/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js" type="application/javascript"></script>
+ <script src="/resources/scripts/app.js" type="application/javascript"></script>
++<script src="/resources/scripts/services.js" type="application/javascript"></script>
++<script src="/resources/scripts/controllers.js" type="application/javascript"></script>
+-<script src="/resources/scripts/components.js" type="application/javascript" ></script>
++<script src="/resources/scripts/components.js" type="application/javascript"></script>
++
++<link rel="stylesheet" href="/resources/bower_components/jquery-ui/themes/pepper-grinder/jquery-ui.min.css">
++<link rel="stylesheet" href="/resources/bower_components/bootstrap/dist/css/bootstrap.min.css">
++<link rel="stylesheet" href="/resources/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+ <link rel="stylesheet" href="/resources/styles/main.css">
+Index: src/main/java/spring4Template/ws/UserWebService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/ws/UserWebService.java	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/java/spring4Template/ws/UserWebService.java	(revision )
+@@ -23,7 +23,7 @@
+ import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_EDIT;
+ 
+ @RestController
+-@RequestMapping(value = "ws/user")
++@RequestMapping(value = "ws/users")
+ public class UserWebService {
+ 
+     @Autowired private ValidationResultFactory validationResultFactory;
+@@ -39,7 +39,7 @@
+         binder.setValidator(userValidator);
+     }
+ 
+-    @RequestMapping(value = "/list", method = GET)
++    @RequestMapping(method = GET)
+     public UserListResponse list() {
+         UserListResponse response = new UserListResponse();
+         response.setHasUserDeleteAccess(authProvider.hasRole(ROLE_USER_DELETE));
+@@ -49,13 +49,13 @@
+         return response;
+     }
+ 
+-    @RequestMapping(value = "/{userId}/delete", method = DELETE)
++    @RequestMapping(value = "/{userId}", method = DELETE)
+     public ResponseEntity delete(@PathVariable String userId) {
+         userService.delete(userId);
+         return new ResponseEntity<String>(OK);
+     }
+ 
+-    @RequestMapping(value = "/save", method = POST)
++    @RequestMapping(method = POST)
+     public ResponseEntity save(@Validated @ModelAttribute(COMMAND_NAME) UserCommand userCommand, BindingResult bindingResult) {
+         if (bindingResult.hasErrors()) {
+             Map<String, String> validationResult = validationResultFactory.getFiledValidationResult(bindingResult);
+@@ -64,6 +64,5 @@
+         userService.save(userCommand);
+         return new ResponseEntity<String>(OK);
+     }
+-
+ 
+ }
+Index: src/main/webapp/resources/scripts/userController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/userController.js	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/resources/scripts/userController.js	(revision )
+@@ -1,4 +1,4 @@
+-app.controller("UserController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http) {
++app.controller("UserOverviewController", function ($rootScope, $scope, $http, $modal) {
+ 
+     $scope.userEditDialogElement = $("#userEditDialog");
+     $scope.userDeleteConfirmDialog = $("#userDeleteConfirmDialog");
+@@ -7,94 +7,55 @@
+     $scope.validationErrors = {};
+     $scope.editedUser;
+ 
+-
+     $scope.showDeletionDialog = false;
+ 
+-    $scope.deletionError;
+-
+-    $scope.initializeJQueryUI = function () {
+-        initializeJQueryUI();
+-    };
+-
+-    $scope.dialog = $scope.openEditUserDialog = function () {
+-        $scope.userEditDialogElement.dialog({
+-            height: 400,
+-            width: 500,
+-            modal: true,
+-            title: $scope.editedUser.id ? 'Edit user ' + $scope.editedUser.userName : 'Create new user',
+-            buttons: {
+-                "Save": $scope.save,
+-                Cancel: function () {
+-                    $(this).dialog('close');
+-                }
+-            }
+-        });
+-    };
+-
+     $scope.edit = function (user) {
++        $scope.editedUserLink = user;
+         $scope.validationErrors = {};
+         $scope.editedUser = angular.copy(user);
+         if ($scope.editedUser.password) {
+             $scope.editedUser.password = "******";
+         }
+-        $scope.openEditUserDialog();
++        $scope.editDialog();
+     };
+ 
+     $scope.create = function () {
+         $scope.validationErrors = {};
+         $scope.editedUser = {};
+-        $scope.openEditUserDialog();
++        $scope.editDialog();
+     };
+ 
+     $scope.loadUsers = function () {
+-        $http.get("/ws/user/list").success(function (data) {
++        $http.get("/ws/users").success(function (data) {
+             $scope.model = data;
+-            $rootScope.$broadcast('dynamicContentUpdated');
+         })
+     };
+ 
+-    $scope.save = function () {
+-        $http({
+-            method: 'POST',
+-            url: '/ws/user/save',
+-            data: $.param($scope.editedUser),
+-            headers: {
+-                'Content-Type': 'application/x-www-form-urlencoded'
++    $scope.editDialog = function () {
++        $modal.open({
++            templateUrl: 'edit',
++            controller: 'UserEditController',
++            resolve: {
++                user: function () {
++                    return $scope.editedUser;
++                },
++                onSuccess: function () {
++                    return $scope.loadUsers;
+-            }
++                }
+-        }).error(function (data) {
+-            $scope.validationErrors = data;
+-        }).success(function () {
+-            $scope.validationErrors = {};
+-            $scope.editedUser = undefined;
+-            $scope.loadUsers();
+-            $scope.userEditDialogElement.dialog('close');
+-        })
++            }
++        });
+     };
+ 
+-    function deleteUser(user) {
+-        $http({
+-            method: 'DELETE',
+-            url: '/ws/user/' + user.id + '/delete'
+-        }).success(function () {
+-            $scope.loadUsers();
+-        }).error(function (data) {
+-            $scope.deletionError = data.message;
+-            alert($scope.deletionError);
+-        }).finally(function () {
+-            $scope.userDeleteConfirmDialog.dialog('close');
+-        });
+-    }
+-
+-    $scope.deleteDialog = function (user) {
+-        $scope.userDeleteConfirmDialog.dialog({
+-            height: 250,
+-            modal: true,
+-            buttons: {
+-                "Delete": function () {
+-                    deleteUser(user);
++    $scope.deleteUser = function (user) {
++        $modal.open({
++            templateUrl: 'delete',
++            controller: 'UserDeleteController',
++            resolve: {
++                user:  function () {
++                    return user;
+                 },
+-                Cancel: function () {
+-                    $scope.userDeleteConfirmDialog.dialog('close');
++                onSuccess: function () {
++                    return $scope.loadUsers;
+                 }
+             }
+         });
+@@ -102,6 +63,5 @@
+ 
+     $scope.loadUsers();
+ 
++});
+ 
+-
+-}]);
+\ No newline at end of file
+Index: src/main/webapp/WEB-INF/views/home.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/WEB-INF/views/home.jsp	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/WEB-INF/views/home.jsp	(revision )
+@@ -22,5 +22,9 @@
+             </li>
+         </ul>
+     </div>
++    <ul ng-controller="LanguageController">
++        <li><a href="" ng-click="changeLanguage('en')">en</a>
++        <li><a href="" ng-click="changeLanguage('ru')">de</a>
++    </ul>
+ </body>
+ </html>
+\ No newline at end of file
+Index: src/main/webapp/resources/scripts/userEditController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/userEditController.js	(revision )
++++ src/main/webapp/resources/scripts/userEditController.js	(revision )
+@@ -0,0 +1,32 @@
++app.controller('UserEditController', function ($scope, $http, $modalInstance, user, onSuccess) {
++
++    $scope.model = {};
++
++    $http.get("/ws/users/groups").success(function(data) {
++        $scope.model = data;
++    });
++
++    $scope.editedUser = user;
++
++    $scope.saveUser = function () {
++        $http({
++            method: 'POST',
++            url: '/ws/users',
++            data: $.param($scope.editedUser),
++            headers: {
++                'Content-Type': 'application/x-www-form-urlencoded'
++            }
++        }).error(function (data) {
++            $scope.validationErrors = data;
++        }).success(function () {
++            $scope.validationErrors = {};
++            $modalInstance.dismiss('cancel');
++            onSuccess();
++        })
++    };
++
++    $scope.cancel = function () {
++        $modalInstance.dismiss('cancel');
++    };
++
++});
+\ No newline at end of file
+Index: src/main/webapp/resources/scripts/services.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/services.js	(revision )
++++ src/main/webapp/resources/scripts/services.js	(revision )
+@@ -0,0 +1,13 @@
++'use strict';
++
++var services = angular.module('services', ['ngResource']);
++
++services.factory('myLang', ['$location', function ($location) {
++    return {
++        put: function (name, value) {
++        },
++        get: function (name) {
++            return $location.search()['lang']
++        }
++    }
++}]);
+\ No newline at end of file
+Index: src/main/webapp/resources/directives/fieldValidationErrorPlaceHolder.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/directives/fieldValidationErrorPlaceHolder.html	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/resources/directives/fieldValidationErrorPlaceHolder.html	(revision )
+@@ -1,3 +1,5 @@
+-<tr ng-show="error">
+-    <td colspan="2" class="ui-state-error">{{error}}</td>
+-</tr>
+\ No newline at end of file
++<div ng-show="error" class="alert alert-danger" role="alert">
++    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
++    <span class="sr-only">Error:</span>
++    {{error}}
++</div>
+\ No newline at end of file
+Index: src/main/webapp/WEB-INF/views/user/user_edit.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/WEB-INF/views/user/user_edit.jsp	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/WEB-INF/views/user/user_edit.jsp	(revision )
+@@ -2,37 +2,45 @@
+ 
+ <form id="userEditForm" name="userEditForm" ng-submit="save()">
+     <input type="hidden" name="id" ng-model="editedUser.id">
+-    <div ng-show="editedUser">
+-        <table>
+-            <tr ng-hide="editedUser.id">
+-                <td>User Name</td>
+-                <td><input type="text" name="userName" ng-model="editedUser.userName"></td>
+-            </tr>
+-            <tr>
+-                <td>First Name</td>
+-                <td><input type="text" ng-model="editedUser.firstName"></td>
+-            </tr>
+-            <tr field-validation-error-place-holder error="validationErrors.firstName"></tr>
+-            <tr>
+-                <td>Last Name</td>
+-                <td><input type="text" ng-model="editedUser.lastName"></td>
+-            </tr>
+-            <tr field-validation-error-place-holder error="validationErrors.lastName"></tr>
+-            <tr>
+-                <td>Password</td>
+-                <td><input type="password" ng-model="editedUser.password"></td>
+-            </tr>
+-            <tr field-validation-error-place-holder error="validationErrors.password"></tr>
+-            <tr>
+-                <td>User Group</td>
+-                <td>
+-                    <select ng-model="editedUser.userGroupId">
++    <div class="modal-header">
++        <h3 class="modal-title">
++            <div class="animate-switch" ng-if="!editedUser.id">New user</div>
++            <div class="animate-switch" ng-if="editedUser.id">Edit user</div>
++        </h3>
++    </div>
++    <div class="modal-body" ng-show="editedUser">
++        <div class="form-group" ng-hide="editedUser.id">
++            <label for="userNameInput">User Name</label>
++            <input type="text" name="userName" class="form-control" id="userNameInput" ng-model="editedUser.userName">
++        </div>
++        <div class="form-group">
++            <label for="userNameInput">First Name</label>
++            <input type="text" name="userName" class="form-control" id="firstNameInput" ng-model="editedUser.firstName">
++
++            <div field-validation-error-place-holder error="validationErrors.firstName"></div>
++        </div>
++        <div class="form-group">
++            <label for="lastNameInput">Last Name</label>
++            <input type="text" name="userName" class="form-control" id="lastNameInput" ng-model="editedUser.lastName">
++
++            <div field-validation-error-place-holder error="validationErrors.lastName"></div>
++        </div>
++        <div class="form-group">
++            <label for="passwordInput">Password</label>
++            <input type="text" name="userName" class="form-control" id="passwordInput" ng-model="editedUser.password">
++
++            <div field-validation-error-place-holder error="validationErrors.password"></div>
++        </div>
++        <div class="form-group">
++            <label for="userGroupInput">User Group</label>
++            <select ng-model="editedUser.userGroupId" id="userGroupInput" class="form-control">
+-                        <option ng-repeat="userGroup in model.userGroups" value="{{userGroup.id}}">{{userGroup.name}}</option>
+-                    </select>
++                <option ng-repeat="userGroup in model.userGroups" value="{{userGroup.id}}">{{userGroup.name}}</option>
++            </select>
+-                </td>
+-            </tr>
+-            <tr field-validation-error-place-holder error="validationErrors.userGroupId"></tr>
+-        </table>
++            <div field-validation-error-place-holder error="validationErrors.userGroup"></div>
+-    </div>
++        </div>
+-
++    </div>
++    <div class="modal-footer">
++        <button class="btn btn-primary" ng-click="saveUser()">OK</button>
++        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
++    </div>
+-</form>
+\ No newline at end of file
++</form>
+Index: src/main/resources/messages_en.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/resources/messages_en.properties	(revision )
++++ src/main/resources/messages_en.properties	(revision )
+@@ -0,0 +1,2 @@
++system.pages.login-page.username=User name
++system.pages.login-page.password=Password
+\ No newline at end of file
+Index: src/main/webapp/resources/scripts/app.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/app.js	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/resources/scripts/app.js	(revision )
+@@ -1,17 +1,11 @@
+-var app = angular.module("myApp", []);
++var app = angular.module('myApp', ['ui.bootstrap', 'services', 'pascalprecht.translate','ngCookies']);
+ 
+-app.directive('onDynamicContentUpdated', ['$timeout', function ($timeout) {
+-    return {
+-        link: function ($scope, element, attrs) {
+-            $scope.$on('dynamicContentUpdated', function () {
+-                $timeout(function () {
+-                    $scope[attrs.onDynamicContentUpdated].apply();
+-                    initializeJQueryUI();
+-                }, 0, false);
+-            })
+-        }
+-    };
+-}]);
++app.config(function ($translateProvider) {
++    $translateProvider.useUrlLoader('/messageBundle');
++    $translateProvider.useCookieStorage();
++    $translateProvider.preferredLanguage('en');
++    $translateProvider.fallbackLanguage('en');
++});
+ 
+ app.directive('fieldValidationErrorPlaceHolder', function(){
+     return {
+@@ -22,24 +16,6 @@
+             'error': '=error'
+         }
+     };
+-})
+-function initializeJQueryUI() {
+-    $(".simple-button.edit-button").button({
+-        icons: {
+-            primary: "ui-icon-pencil"
+-        },
+-        text: false
+-    });
++});
+-    $(".simple-button.delete-button").button({
+-        icons: {
+-            primary: "ui-icon-trash"
+-        },
+-        text: false
+-    });
+-    $(".button").button();
+-}
+ 
+-$(document).ready(function(){
+-    initializeJQueryUI();
+-});
+ 
+Index: src/main/webapp/resources/scripts/loginPageController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/loginPageController.js	(revision )
++++ src/main/webapp/resources/scripts/loginPageController.js	(revision )
+@@ -0,0 +1,5 @@
++app.controller("LoginPageController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http) {
++
++    $scope.model = {};
++
++}]);
+\ No newline at end of file
+Index: src/main/webapp/resources/scripts/userDeleteController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/webapp/resources/scripts/userDeleteController.js	(revision )
++++ src/main/webapp/resources/scripts/userDeleteController.js	(revision )
+@@ -0,0 +1,24 @@
++app.controller('UserDeleteController', function ($scope, $http, $modalInstance, user, onSuccess) {
++
++    $scope.userToDelete = user;
++
++    $scope.delete = function () {
++        $http({
++            method: 'DELETE',
++            url: '/ws/users/'+$scope.userToDelete.id,
++            headers: {
++                'Content-Type': 'application/x-www-form-urlencoded'
++            }
++        }).error(function (data) {
++            alert(data.message);
++        }).success(function () {
++            $modalInstance.dismiss('cancel');
++            onSuccess();
++        })
++    };
++
++    $scope.cancel = function () {
++        $modalInstance.dismiss('cancel');
++    };
++
++});
+\ No newline at end of file
+Index: src/main/java/spring4Template/ws/schema/UserGroupsResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/ws/schema/UserGroupsResponse.java	(revision )
++++ src/main/java/spring4Template/ws/schema/UserGroupsResponse.java	(revision )
+@@ -0,0 +1,19 @@
++package spring4Template.ws.schema;
++
++
++import spring4Template.domain.model.UserGroupCommand;
++
++import java.util.List;
++
++public class UserGroupsResponse {
++
++    private List<UserGroupCommand> userGroups;
++
++    public void setUserGroups(List<UserGroupCommand> userGroups) {
++        this.userGroups = userGroups;
++    }
++
++    public List<UserGroupCommand> getUserGroups() {
++        return userGroups;
++    }
++}
+Index: src/main/java/spring4Template/configuration/MvcConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/configuration/MvcConfiguration.java	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/java/spring4Template/configuration/MvcConfiguration.java	(revision )
+@@ -2,13 +2,19 @@
+ 
+ import org.springframework.context.annotation.Bean;
+ import org.springframework.context.annotation.Configuration;
++import org.springframework.web.servlet.LocaleResolver;
+ import org.springframework.web.servlet.ViewResolver;
+ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
++import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
++import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
++import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+ import org.springframework.web.servlet.view.InternalResourceViewResolver;
+ 
++import static java.util.Locale.US;
+ 
++
+ @Configuration
+ @EnableWebMvc
+ public class MvcConfiguration extends WebMvcConfigurerAdapter {
+@@ -25,5 +31,31 @@
+     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+         registry.addResourceHandler("/resources/**")
+                 .addResourceLocations("/resources/");
++    }
++
++    @Bean
++    public LocaleResolver localeResolver() {
++        SessionLocaleResolver slr = new SessionLocaleResolver();
++        slr.setDefaultLocale(US);
++        return slr;
++    }
++
++    @Bean
++    public LocaleChangeInterceptor localeChangeInterceptor() {
++        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
++        lci.setParamName("lang");
++        return lci;
++    }
++
++    @Bean
++    public SerializableResourceBundleMessageSource serializableResourceBundleMessageSource(){
++        SerializableResourceBundleMessageSource serializableResourceBundleMessageSource = new SerializableResourceBundleMessageSource();
++        serializableResourceBundleMessageSource.setBasename("classpath:/messages");
++        return serializableResourceBundleMessageSource;
++    }
++
++    @Override
++    public void addInterceptors(InterceptorRegistry registry) {
++        registry.addInterceptor(localeChangeInterceptor());
+     }
+ }
+\ No newline at end of file
+Index: src/main/webapp/WEB-INF/views/login.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/WEB-INF/views/login.jsp	(revision 93d58e439201d06fa06a7be828e4f1f1ed843f66)
++++ src/main/webapp/WEB-INF/views/login.jsp	(revision )
+@@ -4,19 +4,20 @@
+ <html>
+ <head>
+     <c:import url="myAppJavaScripts.jsp"/>
++    <script src="/resources/scripts/loginPageController.js"></script>
+ </head>
+ <body ng-app="myApp">
+-<div class="login-form ui-widget" ng-controller="LoginController as loginCtrl">
++<div class="login-form ui-widget" ng-controller="LoginPageController as loginCtrl">
+     <form method="post" action="login" id="loginForm" name="loginForm">
+         <div class="ui-widget-content" style="width: 350px; margin-left: auto; margin-right: auto;">
+             <div class="ui-widget-header">Authentication</div>
+             <table>
+                 <tr>
+-                    <td>User name:</td>
++                    <td translate>system.pages.login-page.username</td>
+                     <td><input type="text" id="username" name="username" ng-model="credentials.username"></td>
+                 </tr>
+                 <tr>
+-                    <td>Password:</td>
++                    <td translate>system.pages.login-page.password</td>
+                     <td><input type="password"id="password" name="password" ng-model="credentials.password"></td>
+                 </tr>
+                 <tr>
+Index: src/main/java/spring4Template/configuration/SerializableResourceBundleMessageSource.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+--- src/main/java/spring4Template/configuration/SerializableResourceBundleMessageSource.java	(revision )
++++ src/main/java/spring4Template/configuration/SerializableResourceBundleMessageSource.java	(revision )
+@@ -0,0 +1,17 @@
++package spring4Template.configuration;
++
++import org.springframework.context.support.ReloadableResourceBundleMessageSource;
++import org.springframework.stereotype.Component;
++
++import java.util.Locale;
++import java.util.Properties;
++
++@Component
++public class SerializableResourceBundleMessageSource extends ReloadableResourceBundleMessageSource {
++
++    public Properties getAllProperties(Locale locale) {
++        clearCacheIncludingAncestors();
++        PropertiesHolder propertiesHolder = getMergedProperties(locale);
++        return propertiesHolder.getProperties();
++    }
++}
+\ No newline at end of file
