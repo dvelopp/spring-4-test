@@ -9,6 +9,7 @@ import java.util.List;
 public class User extends Identifiable {
 
     @Transient public static final String OLD_PASSWORD_MASK = "******";
+    @Transient public static final int MIN_PASSWORD_LENGTH = 6;
 
     private String firstName;
     private String lastName;

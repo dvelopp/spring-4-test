@@ -2,7 +2,6 @@ package spring4Template.ws.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -10,12 +9,8 @@ import spring4Template.domain.model.UserCommand;
 import spring4Template.service.AuthProvider;
 import spring4Template.service.UserGroupService;
 import spring4Template.service.UserService;
-import spring4Template.utils.ValidationResultFactory;
 import spring4Template.ws.user.schema.UserListResponse;
 
-import java.util.Map;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_DELETE;
@@ -25,7 +20,6 @@ import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_EDIT;
 @RequestMapping(value = "ws/users")
 public class UserWebService {
 
-    @Autowired private ValidationResultFactory validationResultFactory;
     @Autowired private UserGroupService userGroupService;
     @Autowired private UserValidator userValidator;
     @Autowired private AuthProvider authProvider;
@@ -55,11 +49,7 @@ public class UserWebService {
     }
 
     @RequestMapping(method = POST)
-    public ResponseEntity save(@Validated @ModelAttribute(COMMAND_NAME) UserCommand userCommand, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> validationResult = validationResultFactory.getFiledValidationResult(bindingResult);
-            return new ResponseEntity<Object>(validationResult, BAD_REQUEST);
-        }
+    public ResponseEntity save(@Validated @ModelAttribute(COMMAND_NAME) UserCommand userCommand) {
         userService.save(userCommand);
         return new ResponseEntity<String>(OK);
     }

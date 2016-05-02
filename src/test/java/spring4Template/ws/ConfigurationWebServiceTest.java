@@ -35,7 +35,7 @@ public class ConfigurationWebServiceTest {
     }
 
     @Test
-    public void attributes_HasConfigurationViewAccess_TrueHasBeenReturned() throws Exception {
+    public void attributes_HasConfigurationViewAccess_ConfigurationViewAccessIsTrueInResponse() throws Exception {
         when(authProvider.hasRole(ROLE_USER_VIEW)).thenReturn(true);
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
@@ -45,7 +45,7 @@ public class ConfigurationWebServiceTest {
     }
 
     @Test
-    public void attributes_HasNoConfigurationViewAccess_FalseHasBeenReturned() throws Exception {
+    public void attributes_HasNoConfigurationViewAccess_ConfigurationViewAccessIsFalseInResponse() throws Exception {
         when(authProvider.hasRole(ROLE_USER_VIEW)).thenReturn(false);
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
