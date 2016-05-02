@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import spring4Template.domain.entities.User;
-import spring4Template.domain.entities.UserBuilder;
+import spring4Template.domain.model.UserCommand;
 import spring4Template.domain.repositories.UserGroupRepository;
 import spring4Template.domain.repositories.UserRepository;
-import spring4Template.domain.model.UserCommand;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static spring4Template.domain.entities.User.OLD_PASSWORD_MASK;
@@ -36,13 +35,13 @@ public class UserCommandMapper {
         User user;
         if (isNotBlank(userCommand.getId())) {
             user = userRepository.findOne(userCommand.getId());
+            user.setGroup(userGroupRepository.findOne(userCommand.getUserGroupId()));
         } else {
-            user = new UserBuilder().createUser();
+            user = new User(userCommand.getUserName(), userCommand.getPassword(), userGroupRepository.findOne(userCommand.getUserGroupId()));
         }
         user.setFirstName(userCommand.getFirstName());
         user.setLastName(userCommand.getLastName());
         user.setName(userCommand.getUserName());
-        user.setGroup(userGroupRepository.findOne(userCommand.getUserGroupId()));
         if (!OLD_PASSWORD_MASK.equals(userCommand.getPassword())) {
             user.setPassword(passwordEncoder.encode(userCommand.getPassword()));
         }

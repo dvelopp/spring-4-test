@@ -8,6 +8,10 @@ public class UserFixture {
         return builder().build();
     }
 
+    public static User createUserWithFirstName(String firstName) {
+        return builder().setFirstName(firstName).build();
+    }
+
     public static UserBuilder builder() {
         return new UserBuilder();
     }

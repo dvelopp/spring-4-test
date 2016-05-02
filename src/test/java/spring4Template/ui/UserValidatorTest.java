@@ -7,12 +7,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.Errors;
 import spring4Template.domain.model.UserCommand;
+import spring4Template.ws.user.UserValidator;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static spring4Template.ui.UserValidator.USER_NAME_IS_EMPTY_CODE;
-import static spring4Template.ui.UserValidator.USER_NAME_IS_EMPTY_MESSAGE;
-import static spring4Template.ui.validation.UserValidationFieldsConstants.USER_NAME_FIELD;
+import static spring4Template.ws.user.UserValidator.USER_NAME_IS_EMPTY_CODE;
+import static spring4Template.ws.user.UserValidator.USER_NAME_IS_EMPTY_MESSAGE;
+import static spring4Template.ws.user.UserValidationFieldsConstants.USER_NAME_FIELD;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserValidatorTest {

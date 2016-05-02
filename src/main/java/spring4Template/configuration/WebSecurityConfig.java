@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -22,19 +25,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/resources/**").permitAll()
-                .antMatchers("/messageBundle").permitAll()
-                .antMatchers("/initDB").permitAll()
-                .anyRequest().authenticated()
-            .and()
-                .formLogin().loginPage("/login").permitAll()
+        http.formLogin().loginPage("/resources/pages/index.html").permitAll()
                 .defaultSuccessUrl("/home", true)
+            .and()
+                .httpBasic()
             .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .and()
-                .csrf().disable();
+            .and().authorizeRequests()
+                .antMatchers("/resources/**").permitAll()
+                .antMatchers("/messageBundle").permitAll()
+                .antMatchers("/initDB").permitAll() // Temporary DB setup code
+                .anyRequest().authenticated().and()
+                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+                .csrf().csrfTokenRepository(csrfTokenRepository());
     }
 
     @Autowired
@@ -45,6 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-XSRF-TOKEN");
+        return repository;
     }
 
 }

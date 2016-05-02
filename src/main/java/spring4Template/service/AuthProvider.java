@@ -1,6 +1,8 @@
 package spring4Template.service;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,9 @@ import java.util.Collection;
 public class AuthProvider {
 
     public boolean hasRole(String role) {
-        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        SecurityContext context = getContext();
+        Authentication authentication = context.getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         boolean hasRole = false;
         for (GrantedAuthority authority : authorities) {
             hasRole = authority.getAuthority().equals(role);
@@ -19,6 +23,10 @@ public class AuthProvider {
             }
         }
         return hasRole;
+    }
+
+    protected SecurityContext getContext() {
+        return SecurityContextHolder.getContext();
     }
 
 }

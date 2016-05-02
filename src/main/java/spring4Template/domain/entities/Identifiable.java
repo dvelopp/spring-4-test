@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.util.Collections;
+import java.util.List;
 
 @MappedSuperclass
 public abstract class Identifiable {
@@ -18,5 +20,9 @@ public abstract class Identifiable {
 
     public String getId() {
         return id;
+    }
+
+    public List<Identifiable> getRelations(){
+        return Collections.emptyList();
     }
 }

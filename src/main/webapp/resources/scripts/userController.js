@@ -1,8 +1,5 @@
 app.controller("UserOverviewController", function ($rootScope, $scope, $http, $modal) {
 
-    $scope.userEditDialogElement = $("#userEditDialog");
-    $scope.userDeleteConfirmDialog = $("#userDeleteConfirmDialog");
-
     $scope.model = {};
     $scope.validationErrors = {};
     $scope.editedUser;
@@ -33,7 +30,7 @@ app.controller("UserOverviewController", function ($rootScope, $scope, $http, $m
 
     $scope.editDialog = function () {
         $modal.open({
-            templateUrl: 'edit',
+            templateUrl: 'user/user_edit.html',
             controller: 'UserEditController',
             resolve: {
                 user: function () {
@@ -48,7 +45,7 @@ app.controller("UserOverviewController", function ($rootScope, $scope, $http, $m
 
     $scope.deleteUser = function (user) {
         $modal.open({
-            templateUrl: 'delete',
+            templateUrl: 'user/user_delete.html',
             controller: 'UserDeleteController',
             resolve: {
                 user:  function () {

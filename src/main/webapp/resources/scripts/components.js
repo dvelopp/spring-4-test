@@ -1,3 +1,0 @@
-$(function() {
-    $(".jquery-menu").menu();
-});

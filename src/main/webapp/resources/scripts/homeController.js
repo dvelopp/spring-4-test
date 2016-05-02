@@ -2,7 +2,7 @@ app.controller("HomeController", ['$rootScope', '$scope', '$http', '$location', 
 
     $scope.model = {};
 
-    $http.get("/ws/home").success(function(data) {
+    $http.get("/ws/home/attributes").success(function(data) {
         $scope.model = data;
     })
 

@@ -10,6 +10,11 @@ import spring4Template.domain.entities.UserFixture;
 import spring4Template.domain.model.UserCommand;
 import spring4Template.domain.repositories.UserRepository;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static spring4Template.domain.entities.UserFixture.createDefaultUser;
@@ -49,6 +54,30 @@ public class UserServiceTest {
         when(userRepository.findOne(user.getId())).thenReturn(user);
 
         testee.delete(user.getId());
+    }
+
+    @Test
+    public void getUsers_NoUsers_EmptyListHaveBeenReturned(){
+        when(userRepository.findByOrderByFirstNameAsc()).thenReturn(emptyList());
+
+        List<UserCommand> actualUsers = testee.getUsers();
+
+        assertThat(actualUsers).isEmpty();
+    }
+
+    @Test
+    public void getUsers_TwoUsers_UsersHaveBeenMappedToCommandsAndReturned(){
+        User firstUser = UserFixture.createDefaultUser();
+        User secondUser = UserFixture.createDefaultUser();
+        UserCommand firstUserCommand = new UserCommand();
+        UserCommand secondUserCommand = new UserCommand();
+        when(userRepository.findByOrderByFirstNameAsc()).thenReturn(Arrays.asList(firstUser, secondUser));
+        when(userCommandMapper.mapToCommand(firstUser)).thenReturn(firstUserCommand);
+        when(userCommandMapper.mapToCommand(secondUser)).thenReturn(secondUserCommand);
+
+        List<UserCommand> actualUsers = testee.getUsers();
+
+        assertThat(actualUsers).containsExactly(firstUserCommand, secondUserCommand);
     }
 
 }

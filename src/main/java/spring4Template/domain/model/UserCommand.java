@@ -1,5 +1,7 @@
 package spring4Template.domain.model;
 
+import java.util.Objects;
+
 public class UserCommand {
 
     private String id;
@@ -76,5 +78,25 @@ public class UserCommand {
 
     public void setSystemUser(Boolean systemUser) {
         this.systemUser = systemUser;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserCommand that = (UserCommand) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(userName, that.userName) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(userGroupId, that.userGroupId) &&
+                Objects.equals(userGroupName, that.userGroupName) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(systemUser, that.systemUser);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userName, firstName, lastName, userGroupId, userGroupName, password, systemUser);
     }
 }

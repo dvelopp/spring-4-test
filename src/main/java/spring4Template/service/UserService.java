@@ -5,15 +5,13 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring4Template.domain.entities.User;
-import spring4Template.domain.repositories.UserRepository;
 import spring4Template.domain.model.UserCommand;
+import spring4Template.domain.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_DELETE;
-import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_EDIT;
-import static spring4Template.domain.entities.UserAuthorities.ROLE_USER_VIEW;
+import static java.util.stream.Collectors.toList;
+import static spring4Template.domain.entities.UserAuthorities.*;
 
 @Service
 public class UserService {
@@ -24,9 +22,9 @@ public class UserService {
     @Secured(ROLE_USER_VIEW)
     @Transactional(readOnly = true)
     public List<UserCommand> getUsers() {
-        List<UserCommand> userCommands = new ArrayList<>();
-        userRepository.findAll().forEach(user -> userCommands.add(userCommandMapper.mapToCommand(user)));
-        return userCommands;
+        return userRepository.findByOrderByFirstNameAsc().stream()
+                .map(userCommandMapper::mapToCommand)
+                .collect(toList());
     }
 
     @Secured(ROLE_USER_EDIT)

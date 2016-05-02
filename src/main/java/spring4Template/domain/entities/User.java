@@ -1,13 +1,14 @@
 package spring4Template.domain.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user_user")
-public class User extends Identifiable{
+public class User extends Identifiable {
 
     @Transient public static final String OLD_PASSWORD_MASK = "******";
-
 
     private String firstName;
     private String lastName;
@@ -25,7 +26,16 @@ public class User extends Identifiable{
         this.group = group;
     }
 
-    public User(){
+    public User(String firstName, String lastName, String name, String password, Boolean systemUser, UserGroup group) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.name = name;
+        this.password = password;
+        this.systemUser = systemUser;
+        this.group = group;
+    }
+
+    public User() {
 
     }
 
@@ -77,14 +87,10 @@ public class User extends Identifiable{
         this.systemUser = systemUser;
     }
 
-    public User(String firstName, String lastName, String name, String password, Boolean systemUser, UserGroup group) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.name = name;
-        this.password = password;
-        this.systemUser = systemUser;
-        this.group = group;
+    @Override
+    public List<Identifiable> getRelations() {
+        List<Identifiable> relations = new ArrayList<>();
+        relations.add(this.getGroup());
+        return relations;
     }
-
-
 }

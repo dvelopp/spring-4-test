@@ -1,9 +1,7 @@
 package spring4Template.domain;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
@@ -13,28 +11,73 @@ import org.springframework.transaction.annotation.Transactional;
 import spring4Template.Application;
 import spring4Template.domain.entities.Identifiable;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
 @WebAppConfiguration
-@Rollback(value = true)
 @Transactional(transactionManager = "txManager")
-@TestPropertySource(locations="classpath:test.properties")
-@SpringApplicationConfiguration(classes = Application.class)
+@TestPropertySource(locations = "classpath:test.properties")
+@SpringApplicationConfiguration(classes = {Application.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@Rollback(value = true)
 public abstract class HibernateIntegrationTest<Entity extends Identifiable> {
 
-    @Autowired private SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    protected Session getSession() {
-        return sessionFactory.getCurrentSession();
+    private Session getSession() {
+        return entityManager.unwrap(Session.class);
     }
-    
-    protected void save(Entity entity){
+
+    protected SessionAction<Object> save(Entity entity) {
+        saveIdentifiable(entity);
+        return new SessionAction<>(getSession());
+    }
+
+    private void saveIdentifiable(Identifiable entity) {
+        List<Identifiable> relations = entity.getRelations();
+        relations.forEach(this::saveIdentifiable);
         getSession().save(entity);
     }
 
-    protected Entity getById(String entityId){
+    protected SessionAction<Entity> saveAll(Entity... entities) {
+        for (Entity entity : entities) {
+            save(entity);
+        }
+        return new SessionAction<>(getSession());
+    }
+
+    protected Entity getById(String entityId) {
         return getSession().get(getEntityClass(), entityId);
     }
 
     protected abstract Class<Entity> getEntityClass();
+
+    public static class SessionAction<Entity>{
+
+        public SessionAction(Session session) {
+            this.session = session;
+        }
+
+        private Session session;
+
+        public SessionAction flush() {
+            session.flush();
+            return this;
+        }
+
+        public SessionAction clear() {
+            session.clear();
+            return this;
+        }
+
+        public SessionAction flushAndClear() {
+            flush();
+            clear();
+            return this;
+        }
+
+    }
 
 }

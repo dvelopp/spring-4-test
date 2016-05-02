@@ -27,7 +27,9 @@ public abstract class UserGroupFixture {
         }
 
         public UserGroup build() {
-            return new UserGroup(name);
+            UserGroup userGroup = new UserGroup(name);
+            userGroup.setAuthorities(authorities);
+            return userGroup;
         }
     }
 

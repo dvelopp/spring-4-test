@@ -11,7 +11,11 @@ public class UserGroup extends Identifiable {
     private String name;
 
     @ManyToMany
-    @JoinTable(name = "userGroup_userAuthority", joinColumns = { @JoinColumn(name = "userGroup_id") }, inverseJoinColumns = { @JoinColumn(name = "userAuthority_id") })
+    @JoinTable(
+            name = "userGroup_userAuthority",
+            joinColumns = {@JoinColumn(name = "userGroup_id")},
+            inverseJoinColumns = {@JoinColumn(name = "userAuthority_id")}
+    )
     private List<UserAuthority> authorities = new ArrayList<>();
 
     public UserGroup(String name) {
@@ -41,6 +45,7 @@ public class UserGroup extends Identifiable {
         this.name = name;
         this.authorities = authorities;
     }
+
 
 
 }
