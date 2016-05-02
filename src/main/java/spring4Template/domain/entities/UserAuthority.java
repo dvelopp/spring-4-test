@@ -1,5 +1,7 @@
 package spring4Template.domain.entities;
 
+import org.springframework.util.Assert;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,10 +13,11 @@ public class UserAuthority extends Identifiable{
     @Column(nullable = false, unique = true)
     private String name;
 
-    public UserAuthority() {
+    private UserAuthority() {
     }
 
     public UserAuthority(String name) {
+        Assert.hasText(name);
         this.name = name;
     }
 
@@ -23,6 +26,7 @@ public class UserAuthority extends Identifiable{
     }
 
     public void setName(String name) {
+        Assert.hasText(name);
         this.name = name;
     }
 }

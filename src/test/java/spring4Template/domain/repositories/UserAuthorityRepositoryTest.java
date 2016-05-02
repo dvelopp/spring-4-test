@@ -12,7 +12,7 @@ import static spring4Template.domain.entities.UserAuthorityFixture.createDefault
 
 public class UserAuthorityRepositoryTest extends HibernateIntegrationTest<UserAuthority> {
 
-    @Autowired private UserAuthorityCustomRepositoryImpl userAuthorityRepository;
+    @Autowired private UserAuthorityRepository userAuthorityRepository;
 
     @Test
     public void save_ValidEntity_EntityWasSaved() {

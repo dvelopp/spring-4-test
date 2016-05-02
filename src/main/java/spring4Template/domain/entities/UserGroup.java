@@ -1,5 +1,7 @@
 package spring4Template.domain.entities;
 
+import org.springframework.util.Assert;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 @Entity
 public class UserGroup extends Identifiable {
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany
@@ -19,10 +22,11 @@ public class UserGroup extends Identifiable {
     private List<UserAuthority> authorities = new ArrayList<>();
 
     public UserGroup(String name) {
+        Assert.hasText(name);
         this.name = name;
     }
 
-    public UserGroup() {
+    private UserGroup() {
     }
 
     public String getName() {
@@ -30,6 +34,7 @@ public class UserGroup extends Identifiable {
     }
 
     public void setName(String name) {
+        Assert.hasText(name);
         this.name = name;
     }
 
@@ -45,7 +50,5 @@ public class UserGroup extends Identifiable {
         this.name = name;
         this.authorities = authorities;
     }
-
-
 
 }

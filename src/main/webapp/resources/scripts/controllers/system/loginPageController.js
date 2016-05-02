@@ -1,4 +1,4 @@
-app.controller("LoginPageController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
+controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
 
     var authenticate = function (credentials, callback) {
         var headers = credentials ? {

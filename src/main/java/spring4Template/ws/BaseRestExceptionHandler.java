@@ -1,7 +1,6 @@
 package spring4Template.ws;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import spring4Template.ws.system.ValidationErrorsException;
@@ -26,15 +25,18 @@ public class BaseRestExceptionHandler {
         return new ExceptionResponse("There is an error while processing the action. " + exception.getMessage());
     }
 
-
     @ExceptionHandler(ValidationErrorsException.class)
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
     public ValidationErrorsResponse exception(ValidationErrorsException exception) {
-        Errors errors = exception.getErrors();
-        Map<String, String> fieldErrors = errors.getFieldErrors().stream()
+
+        Map<String, String> fieldErrors = exception.getErrors().getFieldErrors().stream()
                 .collect(toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage));
-        List<String> globalErrors = errors.getGlobalErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(toList());
+
+        List<String> globalErrors = exception.getErrors().getGlobalErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(toList());
+
         return new ValidationErrorsResponse(fieldErrors, globalErrors);
     }
 }

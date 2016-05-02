@@ -1,4 +1,4 @@
-app.controller('UserDeleteController', function ($scope, $http, $modalInstance, user, onSuccess) {
+controllers.controller('UserDeleteController', function ($scope, $http, $modalInstance, user, onSuccess) {
 
     $scope.userToDelete = user;
 

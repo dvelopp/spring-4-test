@@ -12,7 +12,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import static java.util.Locale.US;
+import static java.util.Locale.ENGLISH;
 
 
 @Configuration
@@ -36,7 +36,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(US);
+        slr.setDefaultLocale(ENGLISH);
         return slr;
     }
 

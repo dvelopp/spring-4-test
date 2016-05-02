@@ -1,4 +1,4 @@
-app.controller("ConfigurationController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http) {
+controllers.controller("ConfigurationController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http) {
 
     $scope.model = {};
 

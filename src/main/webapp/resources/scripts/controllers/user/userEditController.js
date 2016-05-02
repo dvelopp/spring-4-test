@@ -1,4 +1,4 @@
-app.controller('UserEditController', function ($scope, $http, $modalInstance, user, onSuccess) {
+controllers.controller('UserEditController', function ($scope, $http, $modalInstance, user, onSuccess) {
 
     $scope.model = {};
 

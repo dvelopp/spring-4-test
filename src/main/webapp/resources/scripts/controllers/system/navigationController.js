@@ -1,4 +1,4 @@
-app.controller("NavigationController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
+controllers.controller("NavigationController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
 
     $scope.model = {};
 

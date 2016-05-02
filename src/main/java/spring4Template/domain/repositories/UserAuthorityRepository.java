@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import spring4Template.domain.entities.UserAuthority;
 
 @Repository
-public interface UserAuthorityRepository extends JpaRepository<UserAuthority, String> {
+public interface UserAuthorityRepository extends JpaRepository<UserAuthority, String>, UserAuthorityCustomRepository {
 
 }

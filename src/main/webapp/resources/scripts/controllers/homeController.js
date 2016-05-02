@@ -1,4 +1,4 @@
-app.controller("HomeController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http) {
+controllers.controller("HomeController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http) {
 
     $scope.model = {};
 

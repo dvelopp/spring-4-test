@@ -14,4 +14,5 @@ public class SerializableResourceBundleMessageSource extends ReloadableResourceB
         PropertiesHolder propertiesHolder = getMergedProperties(locale);
         return propertiesHolder.getProperties();
     }
+
 }

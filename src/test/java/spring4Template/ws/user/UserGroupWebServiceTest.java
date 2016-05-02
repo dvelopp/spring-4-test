@@ -46,7 +46,7 @@ public class UserGroupWebServiceTest {
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
 
-        UserGroupsResponse actualUserGroupsResponse = objectMapper.readValue(response.getContentAsString(), UserGroupsResponse.class);
+        UserGroupsResponse actualUserGroupsResponse = getUserGroupsResponse(response);
         assertThat(actualUserGroupsResponse.getUserGroups()).containsOnly(command);
     }
 
@@ -56,8 +56,12 @@ public class UserGroupWebServiceTest {
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
 
-        UserGroupsResponse actualUserGroupsResponse = objectMapper.readValue(response.getContentAsString(), UserGroupsResponse.class);
+        UserGroupsResponse actualUserGroupsResponse = getUserGroupsResponse(response);
         assertThat(actualUserGroupsResponse.getUserGroups()).isEmpty();
+    }
+
+    private UserGroupsResponse getUserGroupsResponse(MockHttpServletResponse response) throws java.io.IOException {
+        return objectMapper.readValue(response.getContentAsString(), UserGroupsResponse.class);
     }
 
     private MockHttpServletResponse sendValidRequestForAttributes() throws Exception {

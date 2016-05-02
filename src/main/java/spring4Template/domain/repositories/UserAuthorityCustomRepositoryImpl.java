@@ -11,11 +11,6 @@ public class UserAuthorityCustomRepositoryImpl implements UserAuthorityCustomRep
     @Autowired private SessionFactory sessionFactory;
 
     @Override
-    public void save(UserAuthority userAuthority) {
-        sessionFactory.getCurrentSession().save(userAuthority);
-    }
-
-    @Override
     public UserAuthority findById(String userId) {
         return sessionFactory.getCurrentSession().get(UserAuthority.class, userId);
     }

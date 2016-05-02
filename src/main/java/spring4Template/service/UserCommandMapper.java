@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import spring4Template.domain.entities.User;
+import spring4Template.domain.entities.UserGroup;
 import spring4Template.domain.model.UserCommand;
 import spring4Template.domain.repositories.UserGroupRepository;
 import spring4Template.domain.repositories.UserRepository;
@@ -33,11 +34,12 @@ public class UserCommandMapper {
 
     public User mapFromCommand(UserCommand userCommand) {
         User user;
+        UserGroup userGroup = userGroupRepository.findOne(userCommand.getUserGroupId());
         if (isNotBlank(userCommand.getId())) {
             user = userRepository.findOne(userCommand.getId());
-            user.setGroup(userGroupRepository.findOne(userCommand.getUserGroupId()));
+            user.setGroup(userGroup);
         } else {
-            user = new User(userCommand.getUserName(), userCommand.getPassword(), userGroupRepository.findOne(userCommand.getUserGroupId()));
+            user = new User(userCommand.getUserName(), userCommand.getPassword(), userGroup);
         }
         user.setFirstName(userCommand.getFirstName());
         user.setLastName(userCommand.getLastName());

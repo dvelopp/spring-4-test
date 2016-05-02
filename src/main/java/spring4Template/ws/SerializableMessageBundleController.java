@@ -14,7 +14,7 @@ public class SerializableMessageBundleController {
     @Autowired private SerializableResourceBundleMessageSource messageBundle;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Properties list(@RequestParam String lang) {
+    public Properties properties(@RequestParam String lang) {
         return messageBundle.getAllProperties(new Locale(lang));
     }
 

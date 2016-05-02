@@ -1,5 +1,7 @@
 package spring4Template.domain.entities;
 
+import org.springframework.util.Assert;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,38 +15,42 @@ public class User extends Identifiable {
 
     private String firstName;
     private String lastName;
+
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
-    private Boolean systemUser = false;
+    @Column(nullable = false)
+    private Boolean systemUser;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "user_user_user_group"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "user_user_user_group"), nullable = false)
     private UserGroup group;
 
     public User(String name, String password, UserGroup group) {
+        Assert.hasText(name);
+        Assert.hasText(password);
+        Assert.notNull(group);
         this.name = name;
         this.password = password;
         this.group = group;
     }
 
     public User(String firstName, String lastName, String name, String password, Boolean systemUser, UserGroup group) {
+        this(name, password, group);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.name = name;
-        this.password = password;
         this.systemUser = systemUser;
-        this.group = group;
     }
 
-    public User() {
-
-    }
+    private User() {}
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        Assert.hasText(name);
         this.name = name;
     }
 
@@ -53,6 +59,7 @@ public class User extends Identifiable {
     }
 
     public void setPassword(String password) {
+        Assert.hasText(password);
         this.password = password;
     }
 
@@ -61,6 +68,7 @@ public class User extends Identifiable {
     }
 
     public void setGroup(UserGroup group) {
+        Assert.notNull(group);
         this.group = group;
     }
 

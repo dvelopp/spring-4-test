@@ -40,7 +40,7 @@ public class NavigationWebServiceTest {
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
 
-        NavigationResponse actualNavigationResponse = objectMapper.readValue(response.getContentAsString(), NavigationResponse.class);
+        NavigationResponse actualNavigationResponse = getNavigationResponse(response);
         assertThat(actualNavigationResponse.isHasConfigurationViewAccess()).isTrue();
     }
 
@@ -50,8 +50,12 @@ public class NavigationWebServiceTest {
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
 
-        NavigationResponse actualNavigationResponse = objectMapper.readValue(response.getContentAsString(), NavigationResponse.class);
+        NavigationResponse actualNavigationResponse = getNavigationResponse(response);
         assertThat(actualNavigationResponse.isHasConfigurationViewAccess()).isFalse();
+    }
+
+    private NavigationResponse getNavigationResponse(MockHttpServletResponse response) throws java.io.IOException {
+        return objectMapper.readValue(response.getContentAsString(), NavigationResponse.class);
     }
 
     private MockHttpServletResponse sendValidRequestForAttributes() throws Exception {

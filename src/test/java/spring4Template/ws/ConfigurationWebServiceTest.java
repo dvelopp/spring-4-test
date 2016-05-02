@@ -40,7 +40,7 @@ public class ConfigurationWebServiceTest {
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
 
-        ConfigurationResponse actualConfigurationResponse = objectMapper.readValue(response.getContentAsString(), ConfigurationResponse.class);
+        ConfigurationResponse actualConfigurationResponse = getConfigurationResponse(response);
         assertThat(actualConfigurationResponse.isHasUserViewAccess()).isTrue();
     }
 
@@ -50,8 +50,12 @@ public class ConfigurationWebServiceTest {
 
         MockHttpServletResponse response = sendValidRequestForAttributes();
 
-        ConfigurationResponse actualConfigurationResponse = objectMapper.readValue(response.getContentAsString(), ConfigurationResponse.class);
+        ConfigurationResponse actualConfigurationResponse = getConfigurationResponse(response);
         assertThat(actualConfigurationResponse.isHasUserViewAccess()).isFalse();
+    }
+
+    private ConfigurationResponse getConfigurationResponse(MockHttpServletResponse response) throws java.io.IOException {
+        return objectMapper.readValue(response.getContentAsString(), ConfigurationResponse.class);
     }
 
     private MockHttpServletResponse sendValidRequestForAttributes() throws Exception {

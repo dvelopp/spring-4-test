@@ -1,4 +1,4 @@
-app.controller("UserOverviewController", function ($rootScope, $scope, $http, $modal) {
+controllers.controller("UserOverviewController", function ($rootScope, $scope, $http, $modal) {
 
     $scope.model = {};
     $scope.validationErrors = {};
