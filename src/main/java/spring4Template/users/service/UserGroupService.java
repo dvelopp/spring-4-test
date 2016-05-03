@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring4Template.users.domain.entities.UserGroup;
-import spring4Template.users.domain.model.IdNameCommand;
+import spring4Template.system.domain.model.IdNameCommand;
 import spring4Template.users.domain.repositories.UserGroupRepository;
 
 import java.util.List;

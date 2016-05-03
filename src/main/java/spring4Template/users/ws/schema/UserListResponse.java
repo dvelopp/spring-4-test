@@ -2,7 +2,7 @@ package spring4Template.users.ws.schema;
 
 
 import spring4Template.users.domain.model.UserCommand;
-import spring4Template.users.domain.model.IdNameCommand;
+import spring4Template.system.domain.model.IdNameCommand;
 
 import java.util.List;
 

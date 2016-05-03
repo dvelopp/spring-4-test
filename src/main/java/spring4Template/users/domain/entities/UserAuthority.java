@@ -1,6 +1,7 @@
 package spring4Template.users.domain.entities;
 
 import org.springframework.util.Assert;
+import spring4Template.system.domain.entities.Identifiable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

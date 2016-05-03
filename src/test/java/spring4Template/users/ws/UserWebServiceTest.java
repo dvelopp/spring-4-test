@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import spring4Template.users.domain.entities.UserGroup;
-import spring4Template.users.domain.model.IdNameCommand;
+import spring4Template.system.domain.model.IdNameCommand;
 import spring4Template.users.domain.model.UserCommand;
 import spring4Template.system.service.AuthProvider;
 import spring4Template.users.service.UserGroupService;

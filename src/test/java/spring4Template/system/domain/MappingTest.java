@@ -1,7 +1,7 @@
 package spring4Template.system.domain;
 
 import org.junit.Test;
-import spring4Template.users.domain.entities.Identifiable;
+import spring4Template.system.domain.entities.Identifiable;
 
 public abstract class MappingTest<Entity extends Identifiable> extends HibernateIntegrationTest<Entity> {
 

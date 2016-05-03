@@ -1,4 +1,4 @@
-package spring4Template.users.domain.model;
+package spring4Template.system.domain.model;
 
 import java.util.Objects;
 import java.util.function.Function;

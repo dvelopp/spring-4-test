@@ -1,4 +1,4 @@
-package spring4Template.users.domain.entities;
+package spring4Template.system.domain.entities;
 
 import org.hibernate.annotations.GenericGenerator;
 

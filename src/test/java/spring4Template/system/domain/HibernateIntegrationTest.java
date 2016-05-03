@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import spring4Template.Application;
-import spring4Template.users.domain.entities.Identifiable;
+import spring4Template.system.domain.entities.Identifiable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
