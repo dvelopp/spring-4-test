@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "User")
 @Table(name = "user_user")
 public class User extends Identifiable {
 

@@ -8,9 +8,10 @@ import spring4Template.system.ws.schema.ValidationErrorsResponse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -29,8 +30,8 @@ public class BaseRestExceptionHandler {
     @ResponseBody
     public ValidationErrorsResponse exception(ValidationErrorsException exception) {
 
-        Map<String, String> fieldErrors = exception.getErrors().getFieldErrors().stream()
-                .collect(toMap(FieldError::getField, DefaultMessageSourceResolvable::getCode));
+        Map<String, List<String>> fieldErrors = exception.getErrors().getFieldErrors().stream()
+                .collect(groupingBy(FieldError::getField, Collectors.mapping(DefaultMessageSourceResolvable::getCode, toList())));
 
         List<String> globalErrors = exception.getErrors().getGlobalErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)

@@ -14,6 +14,10 @@ public class UserFixture {
         return builder().setFirstName(firstName).build();
     }
 
+    public static User createUserWithName(String name) {
+        return builder().setName(name).build();
+    }
+
     public static UserBuilder builder() {
         return new UserBuilder();
     }

@@ -5,15 +5,15 @@ import java.util.Map;
 
 public class ValidationErrorsResponse {
 
-    private Map<String, String> fieldErrors;
+    private Map<String, List<String>> fieldErrors;
     private List<String> globalErrors;
 
-    public ValidationErrorsResponse(Map<String, String> fieldErrors, List<String> globalErrors) {
+    public ValidationErrorsResponse(Map<String, List<String>> fieldErrors, List<String> globalErrors) {
         this.fieldErrors = fieldErrors;
         this.globalErrors = globalErrors;
     }
 
-    public Map<String, String> getFieldErrors() {
+    public Map<String, List<String>> getFieldErrors() {
         return fieldErrors;
     }
 

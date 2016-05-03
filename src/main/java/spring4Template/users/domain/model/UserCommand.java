@@ -2,6 +2,8 @@ package spring4Template.users.domain.model;
 
 import java.util.Objects;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public class UserCommand {
 
     private String id;
@@ -98,5 +100,9 @@ public class UserCommand {
     @Override
     public int hashCode() {
         return Objects.hash(id, userName, firstName, lastName, userGroupId, userGroupName, password, systemUser);
+    }
+
+    public boolean isNew (){
+        return isBlank(id);
     }
 }

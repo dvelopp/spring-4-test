@@ -7,6 +7,7 @@ import spring4Template.users.domain.entities.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static spring4Template.users.domain.entities.UserFixture.createUserWithFirstName;
+import static spring4Template.users.domain.entities.UserFixture.createUserWithName;
 
 public class UserRepositoryTest extends HibernateIntegrationTest<User> {
 
@@ -43,6 +44,33 @@ public class UserRepositoryTest extends HibernateIntegrationTest<User> {
         Iterable<User> actualUsers = userRepository.findByOrderByFirstNameAsc();
 
         assertThat(actualUsers).containsExactly(firstUser, secondUser);
+    }
+
+    @Test
+    public void existsByName_UserWithSelectedNameExists_TrueHasBeenReturned(){
+        User firstUser = createUserWithName("Test User Name");
+        saveAll(firstUser).flush();
+
+        Boolean userExists = userRepository.existsByName(firstUser.getName());
+
+        assertThat(userExists).isTrue();
+    }
+
+    @Test
+    public void existsByName_UserWithSelectedNameDoesNotExist_FalseHasBeenReturned(){
+        User firstUser = createUserWithName("Test User Name");
+        saveAll(firstUser).flush();
+
+        Boolean userExists = userRepository.existsByName("Invalid user name");
+
+        assertThat(userExists).isFalse();
+    }
+
+    @Test
+    public void existsByName_NoUsersExist_FalseHasBeenReturned(){
+        Boolean userExists = userRepository.existsByName("Invalid user name");
+
+        assertThat(userExists).isFalse();
     }
 
     @Override
