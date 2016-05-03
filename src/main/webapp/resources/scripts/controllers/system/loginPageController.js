@@ -1,4 +1,4 @@
-controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
+controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', '$location', '$sessionStorage', function ($rootScope, $scope, $http, $location, $sessionStorage) {
 
     var authenticate = function (credentials, callback) {
         var headers = credentials ? {
@@ -7,9 +7,9 @@ controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', 
 
         $http.get('/user', {headers: headers}).then(function (response) {
             if (response.data.name) {
-                $rootScope.authenticated = true;
+                $sessionStorage.authenticated = true;
             } else {
-                $rootScope.authenticated = false;
+                $sessionStorage.authenticated = false;
             }
             callback && callback();
         }, function () {
@@ -24,7 +24,7 @@ controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', 
 
     $scope.login = function () {
         authenticate($scope.credentials, function () {
-            if ($rootScope.authenticated) {
+            if ($sessionStorage.authenticated) {
                 $location.path("/");
                 $scope.error = false;
                 $rootScope.$emit("reloadNavigation", {});

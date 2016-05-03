@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and().authorizeRequests()
                 .antMatchers("/resources/**").permitAll()
-                .antMatchers("/messageBundle").permitAll()
+                .antMatchers("/ws/messageBundle/**").permitAll()
                 .antMatchers("/initDB").permitAll() // Temporary DB setup code
                 .anyRequest().authenticated().and()
                 .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)

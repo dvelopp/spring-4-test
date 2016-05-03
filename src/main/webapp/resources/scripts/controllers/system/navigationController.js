@@ -1,5 +1,6 @@
-controllers.controller("NavigationController", ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
+controllers.controller("NavigationController", ['$rootScope', '$scope', '$http', '$location', '$sessionStorage', function ($rootScope, $scope, $http, $location, $sessionStorage) {
 
+    $scope.$storage = $sessionStorage;
     $scope.model = {};
 
     var reloadNavigation = function(){
@@ -16,11 +17,11 @@ controllers.controller("NavigationController", ['$rootScope', '$scope', '$http',
 
     $scope.logout = function () {
         $http.post('logout', {}).success(function () {
-            $rootScope.authenticated = false;
+            $sessionStorage.authenticated = false;
             $location.path("/");
             $rootScope.$emit("reloadNavigation", {});
         }).error(function (data) {
-            $rootScope.authenticated = false;
+            $sessionStorage.authenticated = false;
         });
     }
 

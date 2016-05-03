@@ -6,6 +6,7 @@
 
     <!-- Angular dependencies -->
     <script src="/resources/bower_components/angular/angular.min.js" type="application/javascript"></script>
+    <script src="/resources/bower_components/ngstorage/ngStorage.min.js" type="application/javascript"></script>
     <script src="/resources/bower_components/angular-route/angular-route.min.js" type="application/javascript"></script>
     <script src="/resources/bower_components/angular-cookies/angular-cookies.min.js" type="application/javascript"></script>
     <script src="/resources/bower_components/angular-ui-router/release/angular-ui-router.min.js" type="application/javascript"></script>
@@ -23,7 +24,6 @@
     <!-- Custom scripts -->
     <script src="/resources/scripts/app.js" type="application/javascript"></script>
     <script src="/resources/scripts/routes.js" type="application/javascript"></script>
-    <script src="/resources/scripts/services.js" type="application/javascript"></script>
     <script src="/resources/scripts/controllers/system/languageController.js" type="application/javascript"></script>
     <script src="/resources/scripts/controllers/system/navigationController.js" type="application/javascript"></script>
     <script src="/resources/scripts/controllers/system/loginPageController.js" type="application/javascript"></script>
@@ -48,21 +48,20 @@
 <body ng-app="myApp" ng-cloak class="ng-cloak">
         <div ng-controller="NavigationController as nav" class="container">
             <ul class="nav nav-pills navbar-inverse" role="tablist">
-                <li ng-show="authenticated && model.hasConfigurationViewAccess" ng-class="{active:nav.tab('configuration')}">
+                <li ng-show="$storage.authenticated && model.hasConfigurationViewAccess" ng-class="{active:nav.tab('configuration')}">
                     <a href="#/configuration"><span class="glyphicon glyphicon-star"></span> <span translate>system.navigation.configuration</span></a>
                 </li>
                 <li ng-class="{active:nav.tab('home')}">
                     <a href="#/"><span class="glyphicon glyphicon-home"></span> <span translate>system.navigation.home</span></a>
                 </li>
-                <li ng-show="!authenticated" ng-class="{active:nav.tab('navigation')}">
+                <li ng-show="!$storage.authenticated" ng-class="{active:nav.tab('navigation')}">
                     <a href="#/login"><span class="glyphicon glyphicon-log-in"></span> <span translate>system.navigation.login</span></a>
                 </li>
-                <li ng-show="authenticated">
+                <li ng-show="$storage.authenticated">
                     <a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> <span translate>system.navigation.logout</span></a>
                 </li>
             </ul>
         </div>
-
         <div class="panel panel-default">
             <div class="panel-body">
         <div ng-view class="container"></div>
