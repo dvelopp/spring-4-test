@@ -1,23 +1,14 @@
-.data-table{
-    border: groove;
-}
-
-.data-table td{
-    border: groove;
-    margin: 0px;
-}
 
 .hidden{
     display:none;
-}
-
-.simple-button{
-    height: 25px;
 }
 
 .footer{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    width: 50%;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
 }

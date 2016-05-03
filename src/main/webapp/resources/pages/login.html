@@ -1,3 +1,6 @@
+<div class="page-header">
+    <h1 translate>system.pages.headers.login</h1>
+</div>
 <div class="alert alert-danger" ng-show="error" translate>
     system.pages.login-page.error
 </div>{{controller.error}}
@@ -10,5 +13,5 @@
         <label for="password" translate>system.pages.login-page.password</label>
         <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" translate>system.login.submit</button>
 </form>

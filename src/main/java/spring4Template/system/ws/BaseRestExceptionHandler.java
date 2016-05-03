@@ -30,7 +30,7 @@ public class BaseRestExceptionHandler {
     public ValidationErrorsResponse exception(ValidationErrorsException exception) {
 
         Map<String, String> fieldErrors = exception.getErrors().getFieldErrors().stream()
-                .collect(toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage));
+                .collect(toMap(FieldError::getField, DefaultMessageSourceResolvable::getCode));
 
         List<String> globalErrors = exception.getErrors().getGlobalErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)

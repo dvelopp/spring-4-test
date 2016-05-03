@@ -10,17 +10,17 @@ public final class UserValidationConstants {
     public static final String PASSWORD_FIELD = "password";
 
     //Messages
-    public static final String USER_NAME_IS_EMPTY_CODE = "user.empty-name";
+    public static final String USER_NAME_IS_EMPTY_CODE = "user.validation.empty-name";
     public static final String USER_NAME_IS_EMPTY_MESSAGE = "You have to specify user name";
-    public static final String FIRST_NAME_IS_EMPTY_CODE = "user.empty-first-name";
+    public static final String FIRST_NAME_IS_EMPTY_CODE = "user.validation.empty-first-name";
     public static final String FIRST_NAME_IS_EMPTY_MESSAGE = "You have to specify first name";
-    public static final String LAST_NAME_IS_EMPTY_CODE = "user.empty-last-name";
+    public static final String LAST_NAME_IS_EMPTY_CODE = "user.validation.empty-last-name";
     public static final String LAST_NAME_IS_EMPTY_MESSAGE = "You have to specify last name";
-    public static final String USER_GROUP_IS_EMPTY_CODE = "user.empty-user-group";
+    public static final String USER_GROUP_IS_EMPTY_CODE = "user.validation.empty-user-group";
     public static final String USER_GROUP_IS_EMPTY_MESSAGE = "You have to choose user group";
-    public static final String PASSWORD_IS_EMPTY_CODE = "user.empty-password-name";
+    public static final String PASSWORD_IS_EMPTY_CODE = "user.validation.empty-password";
     public static final String PASSWORD_IS_EMPTY_MESSAGE = "You have to specify password";
-    public static final String PASSWORD_IS_WEAK_CODE = "user.weak-password";
+    public static final String PASSWORD_IS_WEAK_CODE = "user.validation.weak-password";
     public static final String PASSWORD_IS_WEAK_MESSAGE = "Password is too short";
 
     private UserValidationConstants() {

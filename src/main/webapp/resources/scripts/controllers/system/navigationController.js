@@ -18,9 +18,11 @@ controllers.controller("NavigationController", ['$rootScope', '$scope', '$http',
     $scope.logout = function () {
         $http.post('logout', {}).success(function () {
             $sessionStorage.authenticated = false;
+            $sessionStorage.principal = undefined;
             $location.path("/");
             $rootScope.$emit("reloadNavigation", {});
         }).error(function (data) {
+            $sessionStorage.principal = undefined;
             $sessionStorage.authenticated = false;
         });
     }

@@ -7,6 +7,7 @@ controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', 
 
         $http.get('/user', {headers: headers}).then(function (response) {
             if (response.data.name) {
+                $sessionStorage.principal = response.data;
                 $sessionStorage.authenticated = true;
             } else {
                 $sessionStorage.authenticated = false;
@@ -16,7 +17,6 @@ controllers.controller("LoginPageController", ['$rootScope', '$scope', '$http', 
             $rootScope.authenticated = false;
             callback && callback();
         });
-
     };
 
     authenticate();

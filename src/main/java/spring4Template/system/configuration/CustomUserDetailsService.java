@@ -2,11 +2,11 @@ package spring4Template.system.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spring4Template.system.domain.model.SystemUser;
 import spring4Template.users.domain.entities.User;
 import spring4Template.users.domain.entities.UserAuthority;
 import spring4Template.users.domain.repositories.UserRepository;
@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public SystemUser loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username);
         if(user == null) {
             return null;
@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
                 .map(this::mapToSimpleGrantedAuthority)
                 .collect(toList());
-        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), grantedAuthorities);
+        return new SystemUser(user.getName(), user.getPassword(), grantedAuthorities, user.getFirstName(), user.getLastName());
     }
 
     private SimpleGrantedAuthority mapToSimpleGrantedAuthority(UserAuthority a) {
