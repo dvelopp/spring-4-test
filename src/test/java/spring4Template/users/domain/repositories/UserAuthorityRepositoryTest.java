@@ -29,7 +29,7 @@ public class UserAuthorityRepositoryTest extends HibernateIntegrationTest<UserAu
         UserAuthority expectedUserAuthority = createDefaultUserAuthority();
         save(expectedUserAuthority);
 
-        UserAuthority actualUserAuthority = userAuthorityRepository.findById(expectedUserAuthority.getId());
+        UserAuthority actualUserAuthority = userAuthorityRepository.findOne(expectedUserAuthority.getId());
 
         assertThat(actualUserAuthority).isEqualTo(expectedUserAuthority);
     }
@@ -39,7 +39,7 @@ public class UserAuthorityRepositoryTest extends HibernateIntegrationTest<UserAu
         UserAuthority expectedUserAuthority = createDefaultUserAuthority();
         save(expectedUserAuthority);
 
-        UserAuthority actualUserAuthority = userAuthorityRepository.findById(UUID.randomUUID().toString());
+        UserAuthority actualUserAuthority = userAuthorityRepository.findOne(UUID.randomUUID().toString());
 
         assertThat(actualUserAuthority).isNull();
     }
